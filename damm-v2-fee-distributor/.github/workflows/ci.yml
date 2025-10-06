@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        components: rustfmt, clippy
+
+    - name: Install Solana
+      uses: solana-labs/solana@v1.18.0
+      with:
+        version: 1.18.0
+
+    - name: Install Anchor
+      run: |
+        cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+        avm install latest
+        avm use latest
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        cd damm-v2-fee-distributor
+        npm install
+
+    - name: Run cargo fmt
+      run: |
+        cd damm-v2-fee-distributor
+        cargo fmt --all -- --check
+
+    - name: Run cargo clippy
+      run: |
+        cd damm-v2-fee-distributor
+        cargo clippy --all-targets --all-features -- -D warnings
+
+    - name: Build programs
+      run: |
+        cd damm-v2-fee-distributor
+        anchor build
+
+    - name: Start local validator
+      run: |
+        cd damm-v2-fee-distributor
+        solana-test-validator --reset --quiet &
+        sleep 10
+
+    - name: Run tests
+      run: |
+        cd damm-v2-fee-distributor
+        anchor test --skip-local-validator
+
+    - name: Run demo script
+      run: |
+        cd damm-v2-fee-distributor/scripts
+        npm install
+        npm run demo
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        components: rustfmt, clippy
+
+    - name: Run cargo fmt
+      run: |
+        cd damm-v2-fee-distributor
+        cargo fmt --all -- --check
+
+    - name: Run cargo clippy
+      run: |
+        cd damm-v2-fee-distributor
+        cargo clippy --all-targets --all-features -- -D warnings

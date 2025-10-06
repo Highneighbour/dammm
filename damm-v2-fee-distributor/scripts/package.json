@@ -1,0 +1,21 @@
+{
+  "name": "damm-v2-fee-distributor-scripts",
+  "version": "1.0.0",
+  "description": "Demo scripts for DAMM v2 Fee Distributor",
+  "main": "demo.ts",
+  "scripts": {
+    "demo": "ts-node demo.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.31.1",
+    "@solana/web3.js": "^1.87.6",
+    "@solana/spl-token": "^0.4.1",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5"
+  }
+}
