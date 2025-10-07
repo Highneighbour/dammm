@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Token, TokenAccount, Transfer};
+use anchor_spl::token::{Token, TokenAccount};
 
 /// cp-amm/DAMM v2 integration module
 pub mod cp_amm {
@@ -7,8 +7,8 @@ pub mod cp_amm {
 
     /// Claim fees from a DAMM v2 position
     pub fn claim_fees(
-        ctx: Context<ClaimFees>,
-        position_id: Pubkey,
+        _ctx: Context<ClaimFees>,
+        _position_id: Pubkey,
     ) -> Result<ClaimResult> {
         // TODO: Implement actual CPI to cp-amm
         // This would:
@@ -25,9 +25,9 @@ pub mod cp_amm {
 
     /// Create a new DAMM v2 position
     pub fn create_position(
-        ctx: Context<CreatePosition>,
-        tick_lower: i32,
-        tick_upper: i32,
+        _ctx: Context<CreatePosition>,
+        _tick_lower: i32,
+        _tick_upper: i32,
     ) -> Result<Pubkey> {
         // TODO: Implement actual CPI to cp-amm
         // This would:
@@ -40,10 +40,10 @@ pub mod cp_amm {
 
     /// Validate that a position will only accrue quote fees
     pub fn validate_quote_only_position(
-        pool_id: Pubkey,
-        tick_lower: i32,
-        tick_upper: i32,
-        current_tick: i32,
+        _pool_id: Pubkey,
+        _tick_lower: i32,
+        _tick_upper: i32,
+        _current_tick: i32,
     ) -> Result<bool> {
         // TODO: Implement actual validation logic
         // This would:

@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use anchor_lang::system_program;
 
 /// Streamflow interface for reading locked amounts from streams
 pub trait StreamflowClient {
@@ -40,7 +39,7 @@ impl StreamflowClient for MockStreamflowClient {
                     Ok(locked)
                 }
             }
-            None => Err(ErrorCode::StreamAccountNotFound.into()),
+            None => Err(StreamflowError::StreamAccountNotFound.into()),
         }
     }
 }
@@ -71,7 +70,7 @@ impl StreamAccount {
 pub struct RealStreamflowClient;
 
 impl StreamflowClient for RealStreamflowClient {
-    fn locked_amount(&self, stream_pubkey: &Pubkey, timestamp: i64) -> Result<u64> {
+    fn locked_amount(&self, _stream_pubkey: &Pubkey, _timestamp: i64) -> Result<u64> {
         // TODO: Implement actual Streamflow stream reading
         // This would:
         // 1. Read the stream account from the blockchain
@@ -88,21 +87,16 @@ impl StreamflowClient for RealStreamflowClient {
 pub mod streamflow_program {
     use anchor_lang::prelude::*;
 
-    declare_id!("strmQqBqCQCBQUBmQKzYwrfRbaVHq2Q87wqxv6WtoZ");
+    declare_id!("strmQqBqCQCBQUBmQKzYwrfRbaVHq2Q87wqxv6WtoZ1");
 
-    #[program]
-    pub mod streamflow {
-        use super::*;
-
-        pub fn get_locked_amount(
-            ctx: Context<GetLockedAmount>,
-            stream_pubkey: Pubkey,
-            timestamp: i64,
-        ) -> Result<u64> {
-            // This would be implemented by the actual Streamflow program
-            // For now, return a mock value
-            Ok(500000)
-        }
+    pub fn get_locked_amount(
+        _ctx: Context<GetLockedAmount>,
+        _stream_pubkey: Pubkey,
+        _timestamp: i64,
+    ) -> Result<u64> {
+        // This would be implemented by the actual Streamflow program
+        // For now, return a mock value
+        Ok(500000)
     }
 
     #[derive(Accounts)]
@@ -112,7 +106,7 @@ pub mod streamflow_program {
         pub stream: AccountInfo<'info>,
         
         /// The streamflow program
-        pub streamflow_program: Program<'info, streamflow::Streamflow>,
+        pub streamflow_program: Program<'info, System>,
     }
 }
 

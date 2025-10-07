@@ -1,13 +1,11 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Token, TokenAccount, Transfer};
+use anchor_spl::token::{Token, TokenAccount};
 use anchor_spl::associated_token::AssociatedToken;
-use spl_associated_token_account::get_associated_token_address;
 
 mod streamflow;
 mod cp_amm;
 
-use streamflow::{StreamflowClient, MockStreamflowClient};
-use cp_amm::cp_amm;
+// use streamflow::{StreamflowClient, MockStreamflowClient};
 
 declare_id!("11111111111111111111111111111112");
 
@@ -251,7 +249,7 @@ pub mod damm_v2_fee_distributor {
         Ok(progress_pda)
     }
 
-    fn claim_fees_from_damm(accounts: &CrankDistributePage) -> Result<u64> {
+    fn claim_fees_from_damm(_accounts: &CrankDistributePage) -> Result<u64> {
         // TODO: Implement actual CPI to cp-amm to claim fees
         // For now, return a mock value
         // In production, this would:
