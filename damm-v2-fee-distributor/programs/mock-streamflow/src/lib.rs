@@ -8,8 +8,8 @@ pub mod mock_streamflow {
 
     pub fn get_locked_amount(
         ctx: Context<GetLockedAmount>,
-        stream_pubkey: Pubkey,
-        timestamp: i64,
+        _stream_pubkey: Pubkey,
+        _timestamp: i64,
     ) -> Result<u64> {
         // Mock implementation - return a fixed amount for testing
         // In real implementation, this would read the stream account
@@ -18,14 +18,14 @@ pub mod mock_streamflow {
         let stream = &ctx.accounts.stream;
         let stream_data = StreamData::try_from_slice(&stream.data.borrow())?;
         
-        if timestamp >= stream_data.end_ts {
+        if _timestamp >= stream_data.end_ts {
             Ok(0) // Stream has ended
-        } else if timestamp <= stream_data.start_ts {
+        } else if _timestamp <= stream_data.start_ts {
             Ok(stream_data.initial_allocation) // Stream hasn't started
         } else {
             // Calculate linear unlock
             let total_duration = stream_data.end_ts - stream_data.start_ts;
-            let elapsed = timestamp - stream_data.start_ts;
+            let elapsed = _timestamp - stream_data.start_ts;
             let unlocked = (stream_data.initial_allocation as i64 * elapsed) / total_duration;
             let locked = stream_data.initial_allocation.saturating_sub(unlocked as u64);
             Ok(locked)
